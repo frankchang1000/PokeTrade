@@ -75,3 +75,178 @@
     border-color: #c3e6cb;
     color: #155724;
   }
+
+  /* Pokemon Card Styles */
+  .pokemon-card {
+    transition: transform 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .pokemon-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .stat {
+    margin-bottom: 10px;
+  }
+
+  .stat-label {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 2px;
+    font-weight: 500;
+  }
+
+  /* Pokemon Type Background Colors */
+  .bg-normal { background-color: #A8A878 !important; }
+  .bg-fire { background-color: #F08030 !important; }
+  .bg-water { background-color: #6890F0 !important; }
+  .bg-grass { background-color: #78C850 !important; }
+  .bg-electric { background-color: #F8D030 !important; }
+  .bg-ice { background-color: #98D8D8 !important; }
+  .bg-fighting { background-color: #C03028 !important; }
+  .bg-poison { background-color: #A040A0 !important; }
+  .bg-ground { background-color: #E0C068 !important; }
+  .bg-flying { background-color: #A890F0 !important; }
+  .bg-psychic { background-color: #F85888 !important; }
+  .bg-bug { background-color: #A8B820 !important; }
+  .bg-rock { background-color: #B8A038 !important; }
+  .bg-ghost { background-color: #705898 !important; }
+  .bg-dragon { background-color: #7038F8 !important; }
+  .bg-dark { background-color: #705848 !important; }
+  .bg-steel { background-color: #B8B8D0 !important; }
+  .bg-fairy { background-color: #EE99AC !important; }
+
+  /* Homepage Styles */
+  .masthead {
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+  }
+
+  .masthead .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .masthead h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .masthead p {
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .feature-card {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .feature-card .card-header {
+    border-radius: 8px 8px 0 0;
+    padding: 1.25rem;
+  }
+
+  .feature-card .card-body {
+    padding: 1.5rem;
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #6ab43e;
+  }
+
+  .btn-hero {
+    background-color: #6ab43e;
+    border-color: #6ab43e;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-hero:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(106, 180, 62, 0.4);
+  }
+
+  .welcome-section {
+    padding: 4rem 0;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin: 2rem 0;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 992px) {
+    .masthead h2 {
+      font-size: 2.5rem;
+    }
+    
+    .masthead p {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .masthead {
+      padding: 4rem 0;
+    }
+    
+    .masthead h2 {
+      font-size: 2rem;
+    }
+    
+    .masthead p {
+      font-size: 1rem;
+    }
+    
+    .feature-card {
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .masthead h2 {
+      font-size: 1.75rem;
+    }
+    
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+    
+    .btn-hero {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }

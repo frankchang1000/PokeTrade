@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'accounts',
+    'cards',
 ]
 
 MIDDLEWARE = [
@@ -93,13 +94,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 6,  # Reduced from default 8
+        }
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    # Removing CommonPasswordValidator to allow simpler passwords
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # Removing NumericPasswordValidator to allow numeric passwords
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
 ]
 
 
@@ -132,3 +138,4 @@ STATICFILES_DIRS = [
 # Authentication settings
 LOGIN_REDIRECT_URL = 'home.index'
 LOGOUT_REDIRECT_URL = 'home.index'
+LOGIN_URL = 'login'

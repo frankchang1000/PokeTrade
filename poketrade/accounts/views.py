@@ -11,8 +11,13 @@ def register(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}! You can now log in.')
-            return redirect('login')
+            messages.success(request, f'Account created for {username}! You have received 500 coins and 5 starter Pokémon cards.')
+            # Log the user in automatically
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            # Redirect to collection page
+            return redirect('collection')
     else:
         form = UserRegisterForm()
     return render(request, 'accounts/register.html', {'form': form})

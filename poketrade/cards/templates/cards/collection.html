@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>My Pokémon Collection</h1>
+            <p class="lead">Here are all the Pokémon cards you've collected so far.</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="card bg-light p-3">
+                <h5>Your Balance</h5>
+                <h2><i class="fas fa-coins text-warning"></i> {{ user.profile.coins }} coins</h2>
+                <form method="post" action="{% url 'generate_card' %}" class="mt-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" {% if user.profile.coins < 100 %}disabled{% endif %}>
+                        Generate New Card (100 coins)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    {% if template_data.user_cards %}
+        <div class="row">
+            {% for user_card in template_data.user_cards %}
+                <div class="col-md-3 mb-4">
+                    <div class="card pokemon-card h-100">
+                        <div class="card-header bg-{{ user_card.card.type }} text-white">
+                            <h5 class="mb-0">{{ user_card.card.name }}</h5>
+                        </div>
+                        <img src="{{ user_card.card.image_url }}" class="card-img-top p-3" alt="{{ user_card.card.name }}">
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <span class="badge bg-primary">{{ user_card.card.type|title }}</span>
+                                <span class="badge bg-secondary">{{ user_card.card.rarity|title }}</span>
+                            </div>
+                            <div class="card-stats">
+                                <div class="stat">
+                                    <span class="stat-label">HP</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             data-value="{{ user_card.card.hp }}"
+                                             style="width: 0%;" 
+                                             aria-valuenow="{{ user_card.card.hp }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">{{ user_card.card.hp }}</div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Attack</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" role="progressbar" 
+                                             data-value="{{ user_card.card.attack }}"
+                                             style="width: 0%;" 
+                                             aria-valuenow="{{ user_card.card.attack }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">{{ user_card.card.attack }}</div>
+                                    </div>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Defense</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" 
+                                             data-value="{{ user_card.card.defense }}"
+                                             style="width: 0%;" 
+                                             aria-valuenow="{{ user_card.card.defense }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">{{ user_card.card.defense }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Value: <strong>{{ user_card.card.value }} coins</strong></span>
+                                <button class="btn btn-sm btn-outline-primary">Trade</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>You don't have any Pokémon cards yet! Register to get your starter collection.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set all progress bar widths based on data-value
+        document.querySelectorAll('.progress-bar').forEach(function(bar) {
+            const value = bar.getAttribute('data-value');
+            if (value) {
+                bar.style.width = value + '%';
+            }
+        });
+    });
+</script>
+{% endblock extra_js %} 
