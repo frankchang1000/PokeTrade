@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="p-3">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-md-6 mx-auto mb-3">
+        <h2>About</h2>
+        <hr />
+        <p>PokeTrade is a dynamic online platform where players can build, manage, and expand their Pokémon collections through trading and purchasing. After registering for an account, new players are welcomed with a random set of starter Pokémon to kickstart their journey. The home page provides a clear overview of the platform’s purpose and features.</p>
+        <p>Whether you're a casual collector or a dedicated trader, PokeTrade offers a streamlined and engaging environment to connect with other Pokémon enthusiasts and grow your ultimate team.</p>
+      </div>
+      <div class="col-md-6 mx-auto mb-3 text-center">
+        <img src="{% static 'img/about.jpg' %}" class="max-width-100" alt="about" />
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
