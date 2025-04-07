@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / 'poketrade/static/',
 ]
+
+# Authentication settings
+LOGIN_REDIRECT_URL = 'home.index'
+LOGOUT_REDIRECT_URL = 'home.index'

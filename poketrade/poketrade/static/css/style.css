@@ -38,3 +38,40 @@
   .ms-footer-bottom a:hover {
     color: #fff;
   }
+
+  /* Auth Forms */
+  .card-header {
+    background-color: #6ab43e !important;
+  }
+
+  .btn-primary {
+    background-color: #6ab43e !important;
+    border-color: #6ab43e !important;
+  }
+
+  .btn-outline-primary {
+    border-color: #6ab43e !important;
+    color: #6ab43e !important;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #6ab43e !important;
+    color: white !important;
+  }
+
+  form .form-control {
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+
+  form label {
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  /* Alert Messages */
+  .alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
