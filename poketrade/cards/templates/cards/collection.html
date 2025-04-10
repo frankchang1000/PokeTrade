@@ -5,6 +5,12 @@
         <div class="col-md-8">
             <h1>My Pokémon Collection</h1>
             <p class="lead">Here are all the Pokémon cards you've collected so far.</p>
+            
+            <!-- Search Input -->
+            <div class="mb-4">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by Pokémon name or type..." 
+                       value="{{ template_data.search_term|default:'' }}" autocomplete="off">
+            </div>
         </div>
         <div class="col-md-4 text-end">
             <div class="card bg-light p-3">
@@ -20,71 +26,74 @@
         </div>
     </div>
     
-    {% if template_data.user_cards %}
-        <div class="row">
-            {% for user_card in template_data.user_cards %}
-                <div class="col-md-3 mb-4">
-                    <div class="card pokemon-card h-100">
-                        <div class="card-header bg-{{ user_card.card.type }} text-white">
-                            <h5 class="mb-0">{{ user_card.card.name }}</h5>
-                        </div>
-                        <img src="{{ user_card.card.image_url }}" class="card-img-top p-3" alt="{{ user_card.card.name }}">
-                        <div class="card-body">
-                            <div class="mb-2">
-                                <span class="badge bg-primary">{{ user_card.card.type|title }}</span>
-                                <span class="badge bg-secondary">{{ user_card.card.rarity|title }}</span>
+    <!-- Cards Container -->
+    <div id="cardsContainer">
+        {% if template_data.user_cards %}
+            <div class="row">
+                {% for user_card in template_data.user_cards %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card pokemon-card h-100">
+                            <div class="card-header bg-{{ user_card.card.type }} text-white">
+                                <h5 class="mb-0">{{ user_card.card.name }}</h5>
                             </div>
-                            <div class="card-stats">
-                                <div class="stat">
-                                    <span class="stat-label">HP</span>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" 
-                                             data-value="{{ user_card.card.hp }}"
-                                             style="width: 0%;" 
-                                             aria-valuenow="{{ user_card.card.hp }}" 
-                                             aria-valuemin="0" 
-                                             aria-valuemax="100">{{ user_card.card.hp }}</div>
-                                    </div>
+                            <img src="{{ user_card.card.image_url }}" class="card-img-top p-3" alt="{{ user_card.card.name }}">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">{{ user_card.card.type|title }}</span>
+                                    <span class="badge bg-secondary">{{ user_card.card.rarity|title }}</span>
                                 </div>
-                                <div class="stat">
-                                    <span class="stat-label">Attack</span>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-danger" role="progressbar" 
-                                             data-value="{{ user_card.card.attack }}"
-                                             style="width: 0%;" 
-                                             aria-valuenow="{{ user_card.card.attack }}" 
-                                             aria-valuemin="0" 
-                                             aria-valuemax="100">{{ user_card.card.attack }}</div>
+                                <div class="card-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">HP</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 data-value="{{ user_card.card.hp }}"
+                                                 style="width: 0%;" 
+                                                 aria-valuenow="{{ user_card.card.hp }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">{{ user_card.card.hp }}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-label">Defense</span>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-info" role="progressbar" 
-                                             data-value="{{ user_card.card.defense }}"
-                                             style="width: 0%;" 
-                                             aria-valuenow="{{ user_card.card.defense }}" 
-                                             aria-valuemin="0" 
-                                             aria-valuemax="100">{{ user_card.card.defense }}</div>
+                                    <div class="stat">
+                                        <span class="stat-label">Attack</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" 
+                                                 data-value="{{ user_card.card.attack }}"
+                                                 style="width: 0%;" 
+                                                 aria-valuenow="{{ user_card.card.attack }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">{{ user_card.card.attack }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Defense</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" role="progressbar" 
+                                                 data-value="{{ user_card.card.defense }}"
+                                                 style="width: 0%;" 
+                                                 aria-valuenow="{{ user_card.card.defense }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">{{ user_card.card.defense }}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer text-center">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted">Value: <strong>{{ user_card.card.value }} coins</strong></span>
-                                <button class="btn btn-sm btn-outline-primary">Trade</button>
+                            <div class="card-footer text-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted">Value: <strong>{{ user_card.card.value }} coins</strong></span>
+                                    <button class="btn btn-sm btn-outline-primary">Trade</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-info">
-            <p>You don't have any Pokémon cards yet! Register to get your starter collection.</p>
-        </div>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <p>You don't have any Pokémon cards yet! Register to get your starter collection.</p>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock content %}
 
@@ -98,6 +107,115 @@
                 bar.style.width = value + '%';
             }
         });
+        
+        // AJAX search functionality
+        const searchInput = document.getElementById('searchInput');
+        const cardsContainer = document.getElementById('cardsContainer');
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', function() {
+            // Clear previous timeout to prevent multiple requests
+            clearTimeout(searchTimeout);
+            
+            // Set a new timeout to delay the search request
+            searchTimeout = setTimeout(function() {
+                const searchTerm = searchInput.value.trim();
+                
+                // Make AJAX request to search endpoint
+                fetch(`{% url 'search_cards' %}?search=${encodeURIComponent(searchTerm)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update the cards container with the new results
+                        updateCardsDisplay(data.cards);
+                    })
+                    .catch(error => console.error('Error fetching search results:', error));
+            }, 300); // 300ms delay
+        });
+        
+        // Function to update the cards display
+        function updateCardsDisplay(cards) {
+            if (cards.length === 0) {
+                cardsContainer.innerHTML = `
+                    <div class="alert alert-info">
+                        <p>No cards found matching your search.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let cardsHTML = '<div class="row">';
+            
+            cards.forEach(card => {
+                cardsHTML += `
+                    <div class="col-md-3 mb-4">
+                        <div class="card pokemon-card h-100">
+                            <div class="card-header bg-${card.type} text-white">
+                                <h5 class="mb-0">${card.name}</h5>
+                            </div>
+                            <img src="${card.image_url}" class="card-img-top p-3" alt="${card.name}">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">${card.type.charAt(0).toUpperCase() + card.type.slice(1)}</span>
+                                    <span class="badge bg-secondary">${card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)}</span>
+                                </div>
+                                <div class="card-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">HP</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 data-value="${card.hp}"
+                                                 style="width: 0%;" 
+                                                 aria-valuenow="${card.hp}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">${card.hp}</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Attack</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" 
+                                                 data-value="${card.attack}"
+                                                 style="width: 0%;" 
+                                                 aria-valuenow="${card.attack}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">${card.attack}</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Defense</span>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-info" role="progressbar" 
+                                                 data-value="${card.defense}"
+                                                 style="width: 0%;" 
+                                                 aria-valuenow="${card.defense}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">${card.defense}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted">Value: <strong>${card.value} coins</strong></span>
+                                    <button class="btn btn-sm btn-outline-primary">Trade</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cardsHTML += '</div>';
+            cardsContainer.innerHTML = cardsHTML;
+            
+            // Reinitialize progress bars for the new cards
+            document.querySelectorAll('.progress-bar').forEach(function(bar) {
+                const value = bar.getAttribute('data-value');
+                if (value) {
+                    bar.style.width = value + '%';
+                }
+            });
+        }
     });
 </script>
 {% endblock extra_js %} 
