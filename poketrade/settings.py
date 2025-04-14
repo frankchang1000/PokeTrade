@@ -55,6 +55,10 @@ MIDDLEWARE = [
     
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://web-production-ddb6.up.railway.app",
+]
+
 ROOT_URLCONF = 'poketrade.urls'
 
 TEMPLATES = [
