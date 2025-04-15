@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-_kur06-$n*zu0+hw7u#)doz_3@w5k4*#zqo-aqlmb1q&0kdmkh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["web-production-25d21.up.railway.app",]
 
 
 # Application definition
@@ -57,6 +57,7 @@ MIDDLEWARE = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://web-production-ddb6.up.railway.app",
+    "https://web-production-25d21.up.railway.app",
 ]
 
 ROOT_URLCONF = 'poketrade.urls'
@@ -87,7 +88,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    }   
 }
 
 
