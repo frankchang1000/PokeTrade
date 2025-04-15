@@ -93,7 +93,7 @@ main {
 /* Masthead/Hero Section */
 .masthead {
   background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/static/img/background.jpg");
-  background-size: 80% auto;
+  background-size: 100% auto;
   background-position: center -350px;
   padding: 8rem 0;
   position: relative;
