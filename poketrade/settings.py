@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-_kur06-$n*zu0+hw7u#)doz_3@w5k4*#zqo-aqlmb1q&0kdmkh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["web-production-25d21.up.railway.app",]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -146,4 +146,15 @@ STATICFILES_DIRS = [
 # Authentication settings
 LOGIN_REDIRECT_URL = 'home.index'
 LOGOUT_REDIRECT_URL = 'home.index'
-LOGIN_URL = 'login'
+LOGIN_URL = 'accounts:login'
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
