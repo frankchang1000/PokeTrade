@@ -1,252 +1,293 @@
-.bg-index{
-    background: url("/static/img/background.jpg") no-repeat fixed;
-    background-size: 100% auto;
-  }
-  
-  .navbar a.nav-link {
-    color: #FFFEF6 !important;
-  }
-  
-  .bg-dark {
-    background-color: #2E2E2E !important;
-  }
-  
-  .ms-footer {
-    background-color: #202020;
-  }
-  
-  .ms-footer p {
-    color: #7F7F7F;
-    font-size: 13px;
-  }
-  
-  .ms-footer a:hover {
-    color: #6ab43e;
-    text-decoration: none;
-  }
-  
-  .ms-footer-bottom span{
-    font-size: 13px;
-    line-height: 38px;
-  }
-  
-  .ms-footer-bottom a {
-    color: #6ab43e;
-    text-decoration: none;
-  }
-  
-  .ms-footer-bottom a:hover {
-    color: #fff;
-  }
+/* Pokemon Color Scheme */
+:root {
+  --pokemon-green: #4CAF50;
+  --pokemon-light-green: #8BC34A;
+  --pokemon-dark-green: #2E7D32;
+  --pokemon-accent: #FFC107;
+  --light-gray: #F5F5F5;
+  --white: #FFFFFF;
+}
 
-  /* Auth Forms */
-  .card-header {
-    background-color: #6ab43e !important;
-  }
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--light-gray);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-  .btn-primary {
-    background-color: #6ab43e !important;
-    border-color: #6ab43e !important;
-  }
+main {
+  flex: 1;
+}
 
-  .btn-outline-primary {
-    border-color: #6ab43e !important;
-    color: #6ab43e !important;
-  }
+/* Navbar Styling */
+.navbar {
+  background: var(--pokemon-dark-green) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem 1rem !important;
+}
 
-  .btn-outline-primary:hover {
-    background-color: #6ab43e !important;
-    color: white !important;
-  }
+.navbar .navbar-brand {
+  font-weight: 700;
+  color: var(--white) !important;
+}
 
-  form .form-control {
-    margin-bottom: 10px;
-    border-radius: 4px;
-  }
+.navbar .nav-link {
+  color: var(--white) !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin: 0 8px;
+  position: relative;
+}
 
-  form label {
-    font-weight: 500;
-    margin-bottom: 5px;
-  }
+.navbar .nav-link:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--pokemon-accent);
+  transition: width 0.3s ease;
+}
 
-  /* Alert Messages */
-  .alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-  }
+.navbar .nav-link:hover:after {
+  width: 100%;
+}
 
-  /* Pokemon Card Styles */
-  .pokemon-card {
-    transition: transform 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+.navbar.bg-primary {
+  background-color: var(--pokemon-dark-green) !important;
+}
 
-  .pokemon-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
+/* Button Styling */
+.btn-primary {
+  background-color: var(--pokemon-green) !important;
+  border-color: var(--pokemon-green) !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
 
-  .stat {
-    margin-bottom: 10px;
-  }
+.btn-primary:hover {
+  background-color: var(--pokemon-dark-green) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-  .stat-label {
-    display: block;
-    font-size: 0.9em;
-    margin-bottom: 2px;
-    font-weight: 500;
-  }
+.btn-hero {
+  background: linear-gradient(45deg, var(--pokemon-green), var(--pokemon-dark-green));
+  color: white !important;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+}
 
-  /* Pokemon Type Background Colors */
-  .bg-normal { background-color: #A8A878 !important; }
-  .bg-fire { background-color: #F08030 !important; }
-  .bg-water { background-color: #6890F0 !important; }
-  .bg-grass { background-color: #78C850 !important; }
-  .bg-electric { background-color: #F8D030 !important; }
-  .bg-ice { background-color: #98D8D8 !important; }
-  .bg-fighting { background-color: #C03028 !important; }
-  .bg-poison { background-color: #A040A0 !important; }
-  .bg-ground { background-color: #E0C068 !important; }
-  .bg-flying { background-color: #A890F0 !important; }
-  .bg-psychic { background-color: #F85888 !important; }
-  .bg-bug { background-color: #A8B820 !important; }
-  .bg-rock { background-color: #B8A038 !important; }
-  .bg-ghost { background-color: #705898 !important; }
-  .bg-dragon { background-color: #7038F8 !important; }
-  .bg-dark { background-color: #705848 !important; }
-  .bg-steel { background-color: #B8B8D0 !important; }
-  .bg-fairy { background-color: #EE99AC !important; }
+.btn-hero:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.6);
+}
 
-  /* Homepage Styles */
-  .masthead {
-    padding: 6rem 0;
-    position: relative;
-    overflow: hidden;
-    background-position: center;
-    background-size: cover;
-  }
+/* Masthead/Hero Section */
+.masthead {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/static/img/background.jpg");
+  background-size: 80% auto;
+  background-position: center -350px;
+  padding: 8rem 0;
+  position: relative;
+}
 
-  .masthead::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 1;
-  }
+.masthead h2 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  margin-bottom: 1rem;
+}
 
-  .masthead .container {
-    position: relative;
-    z-index: 2;
-  }
+.masthead p {
+  font-size: 1.5rem;
+  color: white;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
 
-  .masthead h2 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  }
+/* About Page Styling */
+.about-section {
+  padding: 4rem 0;
+}
 
-  .masthead p {
-    font-size: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  }
+.about-section h2 {
+  color: var(--pokemon-dark-green);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
 
-  .feature-card {
-    transition: all 0.3s ease;
-    border-radius: 8px;
-    overflow: hidden;
-    height: 100%;
-    border: none;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
+.about-section h2:after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  height: 3px;
+  bottom: -10px;
+  left: 0;
+  background-color: var(--pokemon-accent);
+}
 
-  .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-  }
+.about-section p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+}
 
-  .feature-card .card-header {
-    border-radius: 8px 8px 0 0;
-    padding: 1.25rem;
-  }
+.about-image {
+  border-radius: 10px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.5s ease;
+}
 
-  .feature-card .card-body {
-    padding: 1.5rem;
-  }
+.about-image:hover {
+  transform: scale(1.03);
+}
 
-  .feature-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #6ab43e;
-  }
+/* Card Styling */
+.feature-card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+}
 
-  .btn-hero {
-    background-color: #6ab43e;
-    border-color: #6ab43e;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-  }
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
 
-  .btn-hero:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(106, 180, 62, 0.4);
-  }
+.feature-card .card-header {
+  background: var(--pokemon-dark-green) !important;
+  color: white;
+  font-weight: 600;
+  padding: 1.2rem;
+  border: none;
+}
 
-  .welcome-section {
-    padding: 4rem 0;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    margin: 2rem 0;
-  }
+.feature-card .card-body {
+  padding: 1.5rem;
+}
 
-  /* Responsive Adjustments */
-  @media (max-width: 992px) {
-    .masthead h2 {
-      font-size: 2.5rem;
-    }
-    
-    .masthead p {
-      font-size: 1.25rem;
-    }
-  }
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: var(--pokemon-green);
+  background: linear-gradient(135deg, var(--pokemon-light-green), var(--pokemon-dark-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
-  @media (max-width: 768px) {
-    .masthead {
-      padding: 4rem 0;
-    }
-    
-    .masthead h2 {
-      font-size: 2rem;
-    }
-    
-    .masthead p {
-      font-size: 1rem;
-    }
-    
-    .feature-card {
-      margin-bottom: 2rem;
-    }
-  }
+/* Pokemon Card Styling */
+.pokemon-card {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: none;
+}
 
-  @media (max-width: 576px) {
-    .masthead h2 {
-      font-size: 1.75rem;
-    }
-    
-    .container {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-    
-    .btn-hero {
-      padding: 0.5rem 1.5rem;
-      font-size: 0.9rem;
-    }
-  }
+.pokemon-card:hover {
+  transform: translateY(-10px) rotate(2deg);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.pokemon-card .card-img-top {
+  transform: scale(0.9);
+  transition: transform 0.5s ease;
+}
+
+.pokemon-card:hover .card-img-top {
+  transform: scale(1);
+}
+
+/* Footer Styling */
+footer {
+  background-color: var(--pokemon-dark-green);
+  color: white;
+  margin-top: auto;
+}
+
+.ms-footer {
+  background-color: var(--pokemon-dark-green);
+  padding: 4rem 0 2rem;
+}
+
+.ms-footer h5 {
+  color: var(--pokemon-accent);
+  font-weight: 700;
+}
+
+.ms-footer hr {
+  background-color: var(--pokemon-green);
+  opacity: 0.2;
+}
+
+.ms-footer a {
+  color: var(--light-gray);
+  transition: all 0.2s ease;
+}
+
+.ms-footer a:hover {
+  color: var(--pokemon-accent);
+  text-decoration: none;
+}
+
+.ms-footer-bottom {
+  background-color: var(--pokemon-dark-green);
+  padding: 1rem 0;
+}
+
+.max-width-100 {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Welcome Section */
+.welcome-section {
+  background: linear-gradient(135deg, var(--white), var(--light-gray));
+  border-radius: 15px;
+  padding: 3rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Pokemon Type Background Colors - Keep these for the cards */
+.bg-normal { background-color: #A8A878 !important; }
+.bg-fire { background-color: #F08030 !important; }
+.bg-water { background-color: #6890F0 !important; }
+.bg-grass { background-color: #78C850 !important; }
+.bg-electric { background-color: #F8D030 !important; }
+.bg-ice { background-color: #98D8D8 !important; }
+.bg-fighting { background-color: #C03028 !important; }
+.bg-poison { background-color: #A040A0 !important; }
+.bg-ground { background-color: #E0C068 !important; }
+.bg-flying { background-color: #A890F0 !important; }
+.bg-psychic { background-color: #F85888 !important; }
+.bg-bug { background-color: #A8B820 !important; }
+.bg-rock { background-color: #B8A038 !important; }
+.bg-ghost { background-color: #705898 !important; }
+.bg-dragon { background-color: #7038F8 !important; }
+.bg-dark { background-color: #705848 !important; }
+.bg-steel { background-color: #B8B8D0 !important; }
+.bg-fairy { background-color: #EE99AC !important; }
+
+/* Override bootstrap classes */
+.bg-success {
+  background-color: var(--pokemon-dark-green) !important;
+}
+.bg-primary {
+  background-color: var(--pokemon-dark-green) !important;
+}

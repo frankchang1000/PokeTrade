@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<header class="masthead text-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <h2>PokéTrade</h2>
+        <p class="lead">Collect, Trade, and Build Your Ultimate Pokémon Collection</p>
+        {% if not user.is_authenticated %}
+          <div class="mt-5">
+            <a href="{% url 'register' %}" class="btn btn-hero me-3">Start Your Journey</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light">Login</a>
+          </div>
+        {% else %}
+          <div class="mt-5">
+            <a href="{% url 'collection' %}" class="btn btn-hero">View My Collection</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container my-5">
+  {% if user.is_authenticated %}
+    <div class="welcome-section text-center">
+      <h3>{{ template_data.greeting }}</h3>
+      <p class="lead mb-5">What will you discover today, Trainer?</p>
+      <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+          <div class="feature-card">
+            <div class="card-body text-center">
+              <i class="fas fa-book feature-icon"></i>
+              <h4>My Collection</h4>
+              <p>View and organize your growing Pokémon card collection.</p>
+              <a href="{% url 'collection' %}" class="btn btn-primary">View Collection</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="feature-card">
+            <div class="card-body text-center">
+              <i class="fas fa-random feature-icon"></i>
+              <h4>New Pokémon</h4>
+              <p>Spend coins to discover new Pokémon for your collection.</p>
+              <a href="{% url 'collection' %}" class="btn btn-primary">Get Cards</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="text-center mb-5">
+      <h3>Become a Master Pokémon Collector</h3>
+      <p class="lead">Join PokéTrade and start your Pokémon adventure today!</p>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4 mb-5">
+        <div class="feature-card">
+          <div class="card-header">
+            <h5 class="mb-0">Starter Collection</h5>
+          </div>
+          <div class="card-body text-center">
+            <i class="fas fa-gift feature-icon"></i>
+            <h4>Start Your Journey</h4>
+            <p>When you register, you'll immediately receive:</p>
+            <ul class="text-start list-unstyled">
+              <li><i class="fas fa-check-circle text-success me-2"></i> 5 random Pokémon cards</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i> 500 starter coins</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i> Access to trading features</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-5">
+        <div class="feature-card">
+          <div class="card-header">
+            <h5 class="mb-0">Trading Platform</h5>
+          </div>
+          <div class="card-body text-center">
+            <i class="fas fa-exchange-alt feature-icon"></i>
+            <h4>Connect with Trainers</h4>
+            <p>Expand your collection through trading:</p>
+            <ul class="text-start list-unstyled">
+              <li><i class="fas fa-check-circle text-success me-2"></i> Trade with other collectors</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i> Build your dream team</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i> Find rare Pokémon cards</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-5">
+        <div class="feature-card">
+          <div class="card-header">
+            <h5 class="mb-0">Join Now</h5>
+          </div>
+          <div class="card-body text-center">
+            <i class="fas fa-user-plus feature-icon"></i>
+            <h4>Begin Your Adventure</h4>
+            <p>Ready to start your Pokémon journey?</p>
+            <div class="mt-4">
+              <a href="{% url 'register' %}" class="btn btn-primary btn-lg w-100 mb-3">Register Now</a>
+              <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock content %} 

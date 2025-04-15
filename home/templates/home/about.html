@@ -1,17 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<div class="p-3">
+<div class="about-section">
   <div class="container">
-    <div class="row mt-3">
-      <div class="col-md-6 mx-auto mb-3">
-        <h2>About</h2>
-        <hr />
-        <p>PokeTrade is a dynamic online platform where players can build, manage, and expand their Pokémon collections through trading and purchasing. After registering for an account, new players are welcomed with a random set of starter Pokémon to kickstart their journey. The home page provides a clear overview of the platform’s purpose and features.</p>
-        <p>Whether you're a casual collector or a dedicated trader, PokeTrade offers a streamlined and engaging environment to connect with other Pokémon enthusiasts and grow your ultimate team.</p>
+    <div class="row align-items-center">
+      <div class="col-md-6 mb-5 mb-md-0">
+        <h2 class="mb-4">About PokéTrade</h2>
+        <p class="lead">Your Ultimate Trading Platform for Pokémon Enthusiasts</p>
+        <p>PokeTrade is a dynamic online platform where trainers from around the world can build, manage, and expand their Pokémon collections through strategic trading and purchasing.</p>
+        <p>After registering, you'll receive a random set of starter Pokémon to kickstart your journey. From there, the possibilities are endless - trade with other trainers, expand your collection, and become a Pokémon trading master!</p>
+        <div class="mt-4">
+          <a href="{% url 'register' %}" class="btn btn-hero me-3">Join Now</a>
+          <a href="{% url 'collection' %}" class="btn btn-outline-success">View Collection</a>
+        </div>
       </div>
-      <div class="col-md-6 mx-auto mb-3 text-center">
-        <img src="{% static 'img/about.jpg' %}" class="max-width-100" alt="about" />
+      <div class="col-md-6 text-center">
+        <div class="position-relative">
+          <img src="{% static 'img/Pokemon Day 2022 Kanto Artwork.png' %}" class="about-image img-fluid" alt="Pokémon Starters" />
+          <div class="position-absolute top-0 end-0 p-3 bg-light rounded-circle shadow-lg d-none d-lg-block" style="transform: translate(20%, -20%);">
+            <img src="{% static 'img/logo.png' %}" width="60" alt="PokéTrade" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mt-5 pt-4">
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-light d-inline-flex p-3 mb-3">
+              <i class="fas fa-users text-success fa-2x"></i>
+            </div>
+            <h4>Vibrant Community</h4>
+            <p>Connect with thousands of Pokémon enthusiasts who share your passion.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-light d-inline-flex p-3 mb-3">
+              <i class="fas fa-exchange-alt text-success fa-2x"></i>
+            </div>
+            <h4>Easy Trading</h4>
+            <p>Our intuitive platform makes trading your Pokémon cards simple and secure.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center p-4">
+            <div class="rounded-circle bg-light d-inline-flex p-3 mb-3">
+              <i class="fas fa-trophy text-success fa-2x"></i>
+            </div>
+            <h4>Grow Your Collection</h4>
+            <p>Earn rewards, purchase new cards, and build your ultimate Pokémon collection.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

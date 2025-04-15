@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-_kur06-$n*zu0+hw7u#)doz_3@w5k4*#zqo-aqlmb1q&0kdmkh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vsend.pythonanywhere.com', 'web-production-25d21.up.railway.app']
+ALLOWED_HOSTS = ['vsend.pythonanywhere.com', 'web-production-25d21.up.railway.app', '127.0.0.1', 'localhost']
 
 
 # Application definition
