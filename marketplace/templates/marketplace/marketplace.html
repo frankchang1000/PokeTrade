@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col-lg-8">
+      <h2 class="mb-4">Pokémon Card Marketplace</h2>
+      <div class="alert alert-info">
+        <i class="fas fa-coins"></i> Your current balance: <strong>{{ user_balance }} coins</strong>
+      </div>
+    </div>
+    <div class="col-lg-4 text-end align-self-center">
+      <a href="{% url 'trading' %}" class="btn btn-primary">
+        <i class="fas fa-exchange-alt me-2"></i>Switch to Trading
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- marketplace listings -->
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Available Cards</h4>
+        </div>
+        <div class="card-body">
+          {% if listings %}
+            <div class="row">
+              {% for listing in listings %}
+                <div class="col-md-4 mb-3">
+                  <div class="card h-100">
+                    <div class="card-img-container">
+                      <img src="{{ listing.card.image_url }}" class="card-img-top p-2" alt="{{ listing.card.name }}">
+                      {% if listing.card.rarity %}
+                        <span class="badge {% if listing.card.rarity == 'Common' %}bg-secondary{% elif listing.card.rarity == 'Uncommon' %}bg-success{% elif listing.card.rarity == 'Rare' %}bg-primary{% elif listing.card.rarity == 'Legendary' %}bg-warning{% else %}bg-info{% endif %} position-absolute top-0 end-0 m-2">
+                          {{ listing.card.rarity }}
+                        </span>
+                      {% endif %}
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">{{ listing.card.name }}</h5>
+                      <p class="card-text">
+                        <strong>Price:</strong> {{ listing.price }} coins<br>
+                        <small class="text-muted">Seller: {{ listing.seller.username }}</small>
+                      </p>
+                      {% if listing.seller != user %}
+                        <form action="{% url 'purchase_card' listing.id %}" method="post" class="mt-2">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-success btn-sm w-100">
+                            <i class="fas fa-shopping-cart"></i> Buy Now
+                          </button>
+                        </form>
+                      {% else %}
+                        <form action="{% url 'remove_listing' listing.id %}" method="post" class="mt-2">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger btn-sm w-100">
+                            <i class="fas fa-trash-alt"></i> Remove Listing
+                          </button>
+                        </form>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-secondary text-center">
+              <p>No cards are currently available in the marketplace.</p>
+              <p>Be the first to list a card for sale!</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- sell your cards section -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">Sell Your Cards</h4>
+        </div>
+        <div class="card-body">
+          {% if user_cards %}
+            <p>Select a card to list on the marketplace:</p>
+            <div class="user-cards">
+              {% for user_card in user_cards %}
+                <div class="card mb-3">
+                  <div class="row g-0">
+                    <div class="col-4">
+                      <img src="{{ user_card.card.image_url }}" alt="{{ user_card.card.name }}" class="img-fluid rounded-start p-2">
+                    </div>
+                    <div class="col-8">
+                      <div class="card-body py-2">
+                        <h5 class="card-title h6">{{ user_card.card.name }}</h5>
+                        <div class="card-text">
+                          <form action="{% url 'create_listing' user_card.card.id %}" method="post" class="mt-2">
+                            {% csrf_token %}
+                            <div class="input-group mb-2">
+                              <input type="number" name="price" class="form-control" placeholder="Price" min="1" required>
+                              <span class="input-group-text">coins</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                              <i class="fas fa-tag"></i> List Card
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-secondary">
+              <p>You don't have any cards available to sell.</p>
+              <p>Visit your <a href="{% url 'collection' %}">collection</a> to see your cards.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // add any marketplace-specific javascript here
+  });
+</script>
+{% endblock extra_js %} 

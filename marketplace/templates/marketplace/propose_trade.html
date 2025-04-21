@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <h2 class="mb-4">Propose a Trade with {{ receiver.username }}</h2>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'trading' %}">Trading Hub</a></li>
+          <li class="breadcrumb-item active">Propose Trade</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- cards selection area -->
+    <div class="col-lg-8">
+      <div class="row">
+        <!-- your cards -->
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+              <h4 class="mb-0">Your Cards (Select to Offer)</h4>
+            </div>
+            <div class="card-body">
+              <div class="cards-scrollable">
+                {% if user_cards %}
+                  <div class="row">
+                    {% for user_card in user_cards %}
+                      <div class="col-6 mb-3">
+                        <div class="card h-100 selectable-card" data-card-id="{{ user_card.card.id }}" data-card-type="offered">
+                          <img src="{{ user_card.card.image_url }}" class="card-img-top p-2" alt="{{ user_card.card.name }}">
+                          <div class="card-body p-2">
+                            <h5 class="card-title h6">{{ user_card.card.name }}</h5>
+                            {% if user_card.card.rarity %}
+                              <span class="badge {% if user_card.card.rarity == 'Common' %}bg-secondary{% elif user_card.card.rarity == 'Uncommon' %}bg-success{% elif user_card.card.rarity == 'Rare' %}bg-primary{% elif user_card.card.rarity == 'Legendary' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ user_card.card.rarity }}
+                              </span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="alert alert-warning">
+                    <p>You don't have any cards to offer.</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- their cards -->
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">{{ receiver.username }}'s Cards (Select to Request)</h4>
+            </div>
+            <div class="card-body">
+              <div class="cards-scrollable">
+                {% if receiver_cards %}
+                  <div class="row">
+                    {% for receiver_card in receiver_cards %}
+                      <div class="col-6 mb-3">
+                        <div class="card h-100 selectable-card" data-card-id="{{ receiver_card.card.id }}" data-card-type="requested">
+                          <img src="{{ receiver_card.card.image_url }}" class="card-img-top p-2" alt="{{ receiver_card.card.name }}">
+                          <div class="card-body p-2">
+                            <h5 class="card-title h6">{{ receiver_card.card.name }}</h5>
+                            {% if receiver_card.card.rarity %}
+                              <span class="badge {% if receiver_card.card.rarity == 'Common' %}bg-secondary{% elif receiver_card.card.rarity == 'Uncommon' %}bg-success{% elif receiver_card.card.rarity == 'Rare' %}bg-primary{% elif receiver_card.card.rarity == 'Legendary' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ receiver_card.card.rarity }}
+                              </span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="alert alert-warning">
+                    <p>{{ receiver.username }} doesn't have any cards.</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- trade summary -->
+    <div class="col-lg-4">
+      <div class="card position-sticky" style="top: 20px;">
+        <div class="card-header bg-info text-white">
+          <h4 class="mb-0">Trade Summary</h4>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <h5>You are offering:</h5>
+            <ul class="list-group mb-3" id="offered-cards-list">
+              <li class="list-group-item text-muted" id="no-offered-cards">No cards selected</li>
+            </ul>
+          </div>
+          <div class="mb-3">
+            <h5>You are requesting:</h5>
+            <ul class="list-group mb-3" id="requested-cards-list">
+              <li class="list-group-item text-muted" id="no-requested-cards">No cards selected</li>
+            </ul>
+          </div>
+          <form id="trade-form" action="{% url 'submit_trade_offer' receiver.id %}" method="post">
+            {% csrf_token %}
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success" id="submit-trade-btn" disabled>
+                Submit Trade Offer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+  .cards-scrollable {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  .selectable-card {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .selectable-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .selectable-card.selected {
+    border: 3px solid #28a745;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // trade state
+    const tradeState = {
+      offered: [],
+      requested: []
+    };
+    
+    // functions to update ui
+    function updateTradeDisplay() {
+      // update offered cards
+      const offeredList = document.getElementById('offered-cards-list');
+      const noOfferedMsg = document.getElementById('no-offered-cards');
+      
+      if (tradeState.offered.length > 0) {
+        noOfferedMsg.style.display = 'none';
+        
+        // clear existing cards except the placeholder
+        Array.from(offeredList.children).forEach(child => {
+          if (child.id !== 'no-offered-cards') {
+            child.remove();
+          }
+        });
+        
+        // add selected cards
+        tradeState.offered.forEach(card => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item d-flex justify-content-between align-items-center';
+          li.innerHTML = `
+            ${card.name}
+            <button class="btn btn-sm btn-danger remove-card" data-card-id="${card.id}" data-card-type="offered">
+              <i class="fas fa-times"></i>
+            </button>
+          `;
+          offeredList.appendChild(li);
+        });
+      } else {
+        noOfferedMsg.style.display = 'block';
+      }
+      
+      // update requested cards
+      const requestedList = document.getElementById('requested-cards-list');
+      const noRequestedMsg = document.getElementById('no-requested-cards');
+      
+      if (tradeState.requested.length > 0) {
+        noRequestedMsg.style.display = 'none';
+        
+        // clear existing cards except the placeholder
+        Array.from(requestedList.children).forEach(child => {
+          if (child.id !== 'no-requested-cards') {
+            child.remove();
+          }
+        });
+        
+        // add selected cards
+        tradeState.requested.forEach(card => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item d-flex justify-content-between align-items-center';
+          li.innerHTML = `
+            ${card.name}
+            <button class="btn btn-sm btn-danger remove-card" data-card-id="${card.id}" data-card-type="requested">
+              <i class="fas fa-times"></i>
+            </button>
+          `;
+          requestedList.appendChild(li);
+        });
+      } else {
+        noRequestedMsg.style.display = 'block';
+      }
+      
+      // enable/disable submit button
+      const submitBtn = document.getElementById('submit-trade-btn');
+      submitBtn.disabled = !(tradeState.offered.length > 0 && tradeState.requested.length > 0);
+    }
+    
+    // handle clicking on cards
+    document.querySelectorAll('.selectable-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const cardId = this.dataset.cardId;
+        const cardType = this.dataset.cardType;
+        const cardName = this.querySelector('.card-title').textContent;
+        
+        // toggle selection visually
+        this.classList.toggle('selected');
+        
+        // update trade state
+        if (this.classList.contains('selected')) {
+          // add to trade
+          addCardToTrade(cardId, cardName, cardType);
+        } else {
+          // remove from trade
+          removeCardFromTrade(cardId, cardType);
+        }
+      });
+    });
+    
+    // handle removing cards from trade summary
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.remove-card')) {
+        const btn = e.target.closest('.remove-card');
+        const cardId = btn.dataset.cardId;
+        const cardType = btn.dataset.cardType;
+        
+        // remove card from trade
+        removeCardFromTrade(cardId, cardType);
+        
+        // update visual selection
+        document.querySelector(`.selectable-card[data-card-id="${cardId}"][data-card-type="${cardType}"]`).classList.remove('selected');
+      }
+    });
+    
+    // add card to trade (client-side and ajax)
+    function addCardToTrade(cardId, cardName, cardType) {
+      // update client-side state
+      const card = { id: cardId, name: cardName };
+      if (!tradeState[cardType].some(c => c.id === cardId)) {
+        tradeState[cardType].push(card);
+        updateTradeDisplay();
+      }
+      
+      // send ajax request to add to session
+      const formData = new FormData();
+      formData.append('card_id', cardId);
+      formData.append('card_type', cardType);
+      formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+      
+      fetch('{% url "add_card_to_trade" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status !== 'success') {
+          console.error('Error adding card to trade:', data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+    
+    // remove card from trade (client-side and ajax)
+    function removeCardFromTrade(cardId, cardType) {
+      // update client-side state
+      tradeState[cardType] = tradeState[cardType].filter(card => card.id !== cardId);
+      updateTradeDisplay();
+      
+      // send ajax request to remove from session
+      const formData = new FormData();
+      formData.append('card_id', cardId);
+      formData.append('card_type', cardType);
+      formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+      
+      fetch('{% url "remove_card_from_trade" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status !== 'success') {
+          console.error('Error removing card from trade:', data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  });
+</script>
+{% endblock %} 

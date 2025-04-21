@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col-lg-8">
+      <h2 class="mb-4">Pokémon Card Trading</h2>
+      <p class="text-muted">Trade cards directly with other players - no coins needed!</p>
+    </div>
+    <div class="col-lg-4 text-end align-self-center">
+      <a href="{% url 'marketplace' %}" class="btn btn-primary">
+        <i class="fas fa-store me-2"></i>Switch to Marketplace
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- trades received section -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Trade Offers Received</h4>
+        </div>
+        <div class="card-body">
+          {% if received_trades %}
+            <div class="trades-list">
+              {% for trade in received_trades %}
+                <div class="card mb-3">
+                  <div class="card-header">
+                    <strong>From:</strong> {{ trade.proposer.username }}
+                    <span class="badge bg-primary float-end">{{ trade.created_at|date:"M d, Y" }}</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>You will receive:</h6>
+                        <ul class="list-group">
+                          {% for item in trade.items.all %}
+                            {% if item.item_type == 'offered' %}
+                              <li class="list-group-item">{{ item.card.name }}</li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <div class="col-md-6">
+                        <h6>You will give:</h6>
+                        <ul class="list-group">
+                          {% for item in trade.items.all %}
+                            {% if item.item_type == 'requested' %}
+                              <li class="list-group-item">{{ item.card.name }}</li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-end">
+                      <form action="{% url 'reject_trade' trade.id %}" method="post" class="me-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                      </form>
+                      <form action="{% url 'accept_trade' trade.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Accept</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-info">
+              <p>You don't have any pending trade offers.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- trades sent section -->
+    <div class="col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">Your Pending Offers</h4>
+        </div>
+        <div class="card-body">
+          {% if sent_trades %}
+            <div class="trades-list">
+              {% for trade in sent_trades %}
+                <div class="card mb-3">
+                  <div class="card-header">
+                    <strong>To:</strong> {{ trade.receiver.username }}
+                    <span class="badge bg-secondary float-end">{{ trade.created_at|date:"M d, Y" }}</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>You offered:</h6>
+                        <ul class="list-group">
+                          {% for item in trade.items.all %}
+                            {% if item.item_type == 'offered' %}
+                              <li class="list-group-item">{{ item.card.name }}</li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      <div class="col-md-6">
+                        <h6>You requested:</h6>
+                        <ul class="list-group">
+                          {% for item in trade.items.all %}
+                            {% if item.item_type == 'requested' %}
+                              <li class="list-group-item">{{ item.card.name }}</li>
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-end">
+                      <form action="{% url 'cancel_trade' trade.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Cancel Offer</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-info">
+              <p>You haven't sent any trade offers yet.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- propose new trade section -->
+  <div class="row mt-4">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header bg-info text-white">
+          <h4 class="mb-0">Propose a New Trade</h4>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'propose_trade' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="receiver_id" class="form-label">Select a player to trade with:</label>
+              <select class="form-select" id="receiver_id" name="receiver_id" required>
+                <option value="">-- Select a player --</option>
+                {% for other_user in users_with_cards %}
+                  <option value="{{ other_user.id }}">{{ other_user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Start Trade</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // add any trading-specific javascript here
+  });
+</script>
+{% endblock %} 

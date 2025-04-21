@@ -40,6 +40,9 @@
               <a class="nav-link px-3" href="{% url 'collection' %}">
                 <i class="fas fa-book me-1 d-lg-none"></i> My Collection
               </a>
+              <a class="nav-link px-3" href="{% url 'marketplace' %}">
+                <i class="fas fa-store me-1 d-lg-none"></i> Marketplace
+              </a>
               {% if user.is_superuser %}
               <a class="nav-link px-3" href="/admin">
                 <i class="fas fa-user-shield me-1 d-lg-none"></i> Admin Portal
