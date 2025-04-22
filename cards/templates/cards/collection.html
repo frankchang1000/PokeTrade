@@ -6,10 +6,44 @@
             <h1>My Pokémon Collection</h1>
             <p class="lead">Here are all the Pokémon cards you've collected so far.</p>
             
-            <!-- Search Input -->
+            <!-- Search and Filter Controls -->
             <div class="mb-4">
-                <input type="text" id="searchInput" class="form-control" placeholder="Search by Pokémon name or type..." 
-                       value="{{ template_data.search_term|default:'' }}" autocomplete="off">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search by Pokémon name or type..." 
+                               value="{{ template_data.search_term|default:'' }}" autocomplete="off">
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex">
+                            <button id="sortButton" class="btn btn-outline-secondary me-2 py-2" data-sort="{{ template_data.sort_by|default:'' }}">
+                                <i class="fas fa-sort"></i> Sort
+                            </button>
+                            <button class="btn btn-outline-primary py-2" type="button" data-bs-toggle="collapse" data-bs-target="#typeFilterCollapse" aria-expanded="false" aria-controls="typeFilterCollapse">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Type Filter Checkboxes (Collapsible) -->
+                <div class="collapse mt-2" id="typeFilterCollapse">
+                    <div class="card card-body">
+                        <h6 class="mb-2">Filter by Type:</h6>
+                        <div class="row" id="typeCheckboxes">
+                            {% for type in template_data.available_types %}
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input type-checkbox" type="checkbox" value="{{ type }}" id="type-{{ type }}" 
+                                               {% if type in template_data.filter_types %}checked{% endif %}>
+                                        <label class="form-check-label" for="type-{{ type }}">
+                                            {{ type|title }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-4 text-end">
@@ -110,34 +144,80 @@
         
         // AJAX search functionality
         const searchInput = document.getElementById('searchInput');
+        const sortButton = document.getElementById('sortButton');
+        const typeCheckboxes = document.querySelectorAll('.type-checkbox');
         const cardsContainer = document.getElementById('cardsContainer');
         let searchTimeout;
+        let currentSort = sortButton.getAttribute('data-sort');
         
+        // Function to get selected types
+        function getSelectedTypes() {
+            const selectedTypes = [];
+            typeCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedTypes.push(checkbox.value);
+                }
+            });
+            return selectedTypes;
+        }
+        
+        // Function to update cards display
+        function updateCards() {
+            const searchTerm = searchInput.value.trim();
+            const sortBy = currentSort;
+            const selectedTypes = getSelectedTypes();
+            
+            // Make AJAX request to search endpoint with all parameters
+            fetch(`{% url 'search_cards' %}?search=${encodeURIComponent(searchTerm)}&sort=${encodeURIComponent(sortBy)}&types=${encodeURIComponent(JSON.stringify(selectedTypes))}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update the cards container with the new results
+                    updateCardsDisplay(data.cards);
+                })
+                .catch(error => console.error('Error fetching search results:', error));
+        }
+        
+        // Search input event listener
         searchInput.addEventListener('input', function() {
             // Clear previous timeout to prevent multiple requests
             clearTimeout(searchTimeout);
             
             // Set a new timeout to delay the search request
             searchTimeout = setTimeout(function() {
-                const searchTerm = searchInput.value.trim();
-                
-                // Make AJAX request to search endpoint
-                fetch(`{% url 'search_cards' %}?search=${encodeURIComponent(searchTerm)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update the cards container with the new results
-                        updateCardsDisplay(data.cards);
-                    })
-                    .catch(error => console.error('Error fetching search results:', error));
+                updateCards();
             }, 300); // 300ms delay
+        });
+        
+        // Sort button event listener
+        sortButton.addEventListener('click', function() {
+            // Cycle through three states: no sort, A-Z, Z-A
+            if (currentSort === '') {
+                currentSort = 'name';
+                sortButton.innerHTML = '<i class="fas fa-sort-alpha-down"></i> A-Z';
+            } else if (currentSort === 'name') {
+                currentSort = '-name';
+                sortButton.innerHTML = '<i class="fas fa-sort-alpha-down-alt"></i> Z-A';
+            } else {
+                currentSort = '';
+                sortButton.innerHTML = '<i class="fas fa-sort"></i> Sort';
+            }
+            sortButton.setAttribute('data-sort', currentSort);
+            updateCards();
+        });
+        
+        // Type checkbox event listeners
+        typeCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateCards();
+            });
         });
         
         // Function to update the cards display
         function updateCardsDisplay(cards) {
             if (cards.length === 0) {
                 cardsContainer.innerHTML = `
-                    <div class="alert alert-info">
-                        <p>No cards found matching your search.</p>
+                    <div class="alert alert-info d-flex align-items-center justify-content-center" style="height: 150px;">
+                        <p class="mb-0">No cards found matching your criteria.</p>
                     </div>
                 `;
                 return;

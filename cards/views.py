@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
-from .models import UserCard
+from .models import UserCard, Card
 from .factories import PokemonCardFactory
 from django.db.models import Q
+import json
 
 # Create your views here.
 
@@ -12,6 +13,10 @@ from django.db.models import Q
 def collection(request):
     """View to display the user's card collection"""
     search_term = request.GET.get('search')
+    sort_by = request.GET.get('sort', '')  # 'name' for A-Z, '-name' for Z-A
+    
+    # Get filter types from request
+    filter_types = request.GET.getlist('types', [])
     
     # Base query to get user's cards
     user_cards = UserCard.objects.filter(user=request.user).select_related('card')
@@ -20,10 +25,26 @@ def collection(request):
     if search_term:
         user_cards = user_cards.filter(card__name__icontains=search_term)
     
+    # Apply type filters if provided
+    if filter_types:
+        user_cards = user_cards.filter(card__type__in=filter_types)
+    
+    # Apply sorting if requested
+    if sort_by == 'name':
+        user_cards = user_cards.order_by('card__name')
+    elif sort_by == '-name':
+        user_cards = user_cards.order_by('-card__name')
+    
+    # Get all available types for the filter checkboxes
+    available_types = Card.objects.values_list('type', flat=True).distinct().exclude(type__isnull=True).exclude(type='')
+    
     template_data = {
         'title': 'My Pokémon Collection',
         'user_cards': user_cards,
-        'search_term': search_term,  # Pass search term to template for display
+        'search_term': search_term,
+        'sort_by': sort_by,
+        'filter_types': filter_types,
+        'available_types': available_types,
     }
     
     return render(request, 'cards/collection.html', {'template_data': template_data})
@@ -32,6 +53,15 @@ def collection(request):
 def search_cards(request):
     """AJAX view to search cards without page refresh"""
     search_term = request.GET.get('search', '')
+    sort_by = request.GET.get('sort', '')
+    
+    # Get filter types from request
+    filter_types = []
+    types_param = request.GET.get('types', '[]')
+    try:
+        filter_types = json.loads(types_param)
+    except json.JSONDecodeError:
+        pass
     
     # Base query to get user's cards
     user_cards = UserCard.objects.filter(user=request.user).select_related('card')
@@ -43,6 +73,16 @@ def search_cards(request):
             Q(card__name__icontains=search_term) | 
             Q(card__type__icontains=search_term)
         )
+    
+    # Apply type filters if provided
+    if filter_types:
+        user_cards = user_cards.filter(card__type__in=filter_types)
+    
+    # Apply sorting if requested
+    if sort_by == 'name':
+        user_cards = user_cards.order_by('card__name')
+    elif sort_by == '-name':
+        user_cards = user_cards.order_by('-card__name')
     
     # Prepare card data for JSON response
     cards_data = []
