@@ -292,3 +292,13 @@ footer {
 .bg-primary {
   background-color: var(--pokemon-dark-green) !important;
 }
+
+/* Navbar Logo Size */
+.navbar-logo {
+  height: 90px;
+  width: auto;
+  object-fit: contain;
+  padding-right: 8px;
+  margin-top: -20px;   /* pulls the logo up so it doesn’t stretch navbar */
+  margin-bottom: -20px; /* pulls it down too, visually bigger without stretching navbar */
+}
