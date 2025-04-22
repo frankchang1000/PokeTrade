@@ -5,6 +5,7 @@ from django.db import transaction
 from django.db.models import F
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from .models import Listing, Transaction, TradeOffer, TradeOfferItem
 from cards.models import Card, UserCard
@@ -13,8 +14,20 @@ from accounts.models import Profile
 @login_required
 def marketplace(request):
     """view for the marketplace page showing all active listings"""
+
+    search_term = request.GET.get("search", "")
+    min_price = request.GET.get("min_price")
+    max_price = request.GET.get("max_price")
+
     listings = Listing.objects.filter(is_active=True).select_related('card', 'seller')
-    
+
+    if search_term:
+        listings = listings.filter(card__name__icontains=search_term)
+    if min_price:
+        listings = listings.filter(price__gte=min_price)
+    if max_price:
+        listings = listings.filter(price__lte=max_price)
+
     # get the user's balance for display
     user_profile = Profile.objects.get(user=request.user)
     
