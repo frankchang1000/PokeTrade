@@ -40,6 +40,27 @@ def marketplace(request):
         card__listings__is_active=True
     ).select_related('card')
     
+    # Get user's purchase history (cards they've bought)
+    purchases = Transaction.objects.filter(
+        buyer=request.user
+    ).select_related('listing', 'listing__card', 'listing__seller').order_by('-transaction_date')[:10]
+    
+    # Get user's sale history (cards they've sold)
+    sales = Transaction.objects.filter(
+        listing__seller=request.user
+    ).select_related('listing', 'listing__card', 'buyer').order_by('-transaction_date')[:10]
+    
+    # Get user's trade history (completed trades)
+    trades_sent = TradeOffer.objects.filter(
+        proposer=request.user,
+        status__in=['accepted', 'rejected', 'cancelled']
+    ).select_related('receiver').prefetch_related('items').order_by('-created_at')[:5]
+    
+    trades_received = TradeOffer.objects.filter(
+        receiver=request.user,
+        status__in=['accepted', 'rejected', 'cancelled']
+    ).select_related('proposer').prefetch_related('items').order_by('-created_at')[:5]
+    
     template_data = {
         'title': 'Marketplace',
         'active_page': 'marketplace'
@@ -49,6 +70,10 @@ def marketplace(request):
         'listings': listings,
         'user_cards': user_cards,
         'user_balance': user_profile.coins,
+        'purchases': purchases,
+        'sales': sales,
+        'trades_sent': trades_sent,
+        'trades_received': trades_received,
         'template_data': template_data,
         'page_type': 'marketplace'  # added to identify which page type we're on
     }
