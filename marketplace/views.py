@@ -126,7 +126,10 @@ def purchase_card(request, listing_id):
         listing=listing,
         buyer=request.user
     )
-    UserCard.objects.filter(user=listing.seller, card=listing.card).first().delete
+    
+    # delete the seller's card
+    UserCard.objects.filter(user=listing.seller, card=listing.card).delete()
+    
     # add card to buyer's collection
     UserCard.objects.create(
         user=request.user,
