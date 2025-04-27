@@ -59,7 +59,6 @@ MIDDLEWARE = [
 CSRF_TRUSTED_ORIGINS = [
     "https://web-production-ddb6.up.railway.app",
     "https://web-production-25d21.up.railway.app",
-    "https://vsend.pythonanywhere.com",
 ]
 
 ROOT_URLCONF = 'poketrade.urls'
