@@ -9,31 +9,6 @@
       <div class="alert alert-info">
         <i class="fas fa-coins"></i> Your current balance: <strong>{{ user_balance }} coins</strong>
       </div>
-
-      <form method="get" action="{% url 'marketplace' %}" class="row g-2 mb-4">
-        <div class="row g-2 mb-4">
-          <div class="col-md-6">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search cards by name...">
-          </div>
-          <div class="col-md-3">
-            <select id="minPriceFilter" class="form-select">
-              <option value="">Min Price</option>
-              <option value="10">10+</option>
-              <option value="50">50+</option>
-              <option value="100">100+</option>
-              <option value="500">500+</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <select id="maxPriceFilter" class="form-select">
-              <option value="">Max Price</option>
-              <option value="50">Up to 50</option>
-              <option value="100">Up to 100</option>
-              <option value="500">Up to 500</option>
-              <option value="1000">Up to 1000</option>
-            </select>
-          </div>
-        </div>
     </div>
     <div class="col-lg-4 text-end align-self-center">
       <a href="{% url 'trading' %}" class="btn btn-primary">
@@ -151,36 +126,8 @@
 
 {% block extra_js %}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchInput');
-    const minPriceFilter = document.getElementById('minPriceFilter');
-    const maxPriceFilter = document.getElementById('maxPriceFilter');
-    const cardContainers = document.querySelectorAll('.card.h-100');
-
-    function filterCards() {
-      const searchTerm = searchInput.value.toLowerCase();
-      const minPrice = parseInt(minPriceFilter.value) || 0;
-      const maxPrice = parseInt(maxPriceFilter.value) || Infinity;
-
-      cardContainers.forEach(card => {
-        const name = card.querySelector('.card-title').textContent.toLowerCase();
-        const priceText = card.querySelector('.card-text').textContent.match(/Price:\s*(\d+)/);
-        const price = priceText ? parseInt(priceText[1]) : 0;
-
-        const matchesName = name.includes(searchTerm);
-        const matchesPrice = price >= minPrice && price <= maxPrice;
-
-        if (matchesName && matchesPrice) {
-          card.parentElement.style.display = '';
-        } else {
-          card.parentElement.style.display = 'none';
-        }
-      });
-    }
-
-    searchInput.addEventListener('input', filterCards);
-    minPriceFilter.addEventListener('change', filterCards);
-    maxPriceFilter.addEventListener('change', filterCards);
+  document.addEventListener('DOMContentLoaded', function() {
+    // add any marketplace-specific javascript here
   });
 </script>
-{% endblock extra_js %}
+{% endblock extra_js %} 
