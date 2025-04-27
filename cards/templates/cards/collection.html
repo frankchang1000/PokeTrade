@@ -115,7 +115,7 @@
                             <div class="card-footer text-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted">Value: <strong>{{ user_card.card.value }} coins</strong></span>
-                                    <button class="btn btn-sm btn-outline-primary">Trade</button>
+                                    <a href="{% url 'marketplace' %}" class="btn btn-sm btn-outline-primary">Trade</a>
                                 </div>
                             </div>
                         </div>
@@ -277,7 +277,7 @@
                             <div class="card-footer text-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted">Value: <strong>${card.value} coins</strong></span>
-                                    <button class="btn btn-sm btn-outline-primary">Trade</button>
+                                    <a href="{% url 'marketplace' %}" class="btn btn-sm btn-outline-primary">Trade</a>
                                 </div>
                             </div>
                         </div>
@@ -298,4 +298,4 @@
         }
     });
 </script>
-{% endblock extra_js %} 
+{% endblock extra_js %}
