@@ -420,16 +420,18 @@ def accept_trade(request, trade_id):
         # remove card from proposer's collection
         UserCard.objects.filter(user=trade.proposer, card=item.card).first().delete()
         
-        # add card to receiver's collection
-        UserCard.objects.create(user=trade.receiver, card=item.card)
+        # add card to receiver's collection only if they don't have it
+        if not UserCard.objects.filter(user=trade.receiver, card=item.card).exists():
+            UserCard.objects.create(user=trade.receiver, card=item.card)
         
     # transfer requested cards from receiver to proposer
     for item in requested_items:
         # remove card from receiver's collection
         UserCard.objects.filter(user=trade.receiver, card=item.card).first().delete()
         
-        # add card to proposer's collection
-        UserCard.objects.create(user=trade.proposer, card=item.card)
+        # add card to proposer's collection only if they don't have it
+        if not UserCard.objects.filter(user=trade.proposer, card=item.card).exists():
+            UserCard.objects.create(user=trade.proposer, card=item.card)
         
     # update trade status
     trade.status = 'accepted'
