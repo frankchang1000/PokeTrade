@@ -104,7 +104,6 @@ def remove_listing(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id, seller=request.user)
     listing.is_active = False
     listing.save()
-    
     messages.success(request, f"Your listing for {listing.card.name} has been removed")
     return redirect('marketplace')
 
