@@ -7,9 +7,11 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
 
-from .models import Listing, Transaction, TradeOffer, TradeOfferItem
+from .models import Listing, Transaction, TradeOffer, TradeOfferItem, Notification
 from cards.models import Card, UserCard
 from accounts.models import Profile
+from marketplace.models import Notification
+
 
 @login_required
 def marketplace(request):
@@ -371,6 +373,11 @@ def submit_trade_offer(request, user_id):
             receiver=receiver,
             status='pending'
         )
+
+        Notification.objects.create(
+        user=receiver,
+        message=f"You received a new trade offer from {request.user.username}!"
+)
         
         # add offered cards
         for card_id in offered_card_ids:
@@ -475,6 +482,38 @@ def accept_trade(request, trade_id):
     # update trade status
     trade.status = 'accepted'
     trade.save()
+
+    Notification.objects.create(
+    user=trade.proposer,
+    message=f"Your trade offer to {trade.receiver.username} was accepted!"
+    )
+    Notification.objects.create(
+    user=trade.receiver,
+    message=f"You accepted a trade offer from {trade.proposer.username}!"
+    )
     
     messages.success(request, "Trade completed successfully!")
     return redirect('trading')
+
+def index(request):
+    template_data = {
+        'title': 'Home',
+    }
+    unread_notifications = []
+    all_notifications = []
+
+    if request.user.is_authenticated:
+        unread_notifications = Notification.objects.filter(user=request.user, is_read=False)
+        all_notifications = Notification.objects.filter(user=request.user).order_by('-created_at')[:5]
+
+    return render(request, 'home/index.html', {
+        'template_data': template_data,
+        'unread_notifications': unread_notifications,
+        'all_notifications': all_notifications,
+    })
+
+def mark_notifications_read(request):
+    if request.user.is_authenticated:
+        request.user.notifications.filter(is_read=False).update(is_read=True)
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'not_authenticated'}, status=403)

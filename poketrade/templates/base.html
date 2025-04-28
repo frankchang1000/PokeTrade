@@ -43,6 +43,31 @@
               <a class="nav-link px-3" href="{% url 'marketplace' %}">
                 <i class="fas fa-store me-1 d-lg-none"></i> Marketplace
               </a>
+
+              <div class="nav-item dropdown">
+                <a class="nav-link position-relative px-3" href="#" id="notification-bell" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-bell"></i>
+              
+                  {% if unread_notifications %}
+                    <span id="notification-dot" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                      <span class="visually-hidden">New alerts</span>
+                    </span>
+                  {% endif %}
+                </a>
+              
+                <ul class="dropdown-menu dropdown-menu-end">
+                  {% for notification in all_notifications %}
+                    <li>
+                      <a class="dropdown-item {% if not notification.is_read %}fw-bold{% endif %}" href="#">
+                        {{ notification.message }}
+                      </a>
+                    </li>
+                  {% empty %}
+                    <li><span class="dropdown-item text-muted">No notifications</span></li>
+                  {% endfor %}
+                </ul>
+              </div>
+
               {% if user.is_superuser %}
               <a class="nav-link px-3" href="/admin">
                 <i class="fas fa-user-shield me-1 d-lg-none"></i> Admin Portal
@@ -102,6 +127,27 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    {% block extra_js %}{% endblock extra_js %}
+
+    {% block extra_js %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const bell = document.getElementById('notification-bell');
+      const dot = document.getElementById('notification-dot');
+
+      if (bell) {
+        bell.addEventListener('click', function() {
+          fetch("{% url 'mark_notifications_read' %}")
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'ok' && dot) {
+                dot.remove(); // Remove the red dot
+              }
+            });
+        });
+      }
+    });
+    </script>
+    {% endblock extra_js %}
+    
   </body>
 </html>

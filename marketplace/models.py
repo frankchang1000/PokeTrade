@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from cards.models import Card
+from django.contrib.auth.models import User
+
 
 class Listing(models.Model):
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='listings')
@@ -56,3 +58,11 @@ class TradeOfferItem(models.Model):
     
     def __str__(self):
         return f"{self.get_item_type_display()} {self.card.name} in trade #{self.trade_offer.id}"
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message}"

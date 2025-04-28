@@ -15,4 +15,5 @@ urlpatterns = [
     path('trading/cancel/<int:trade_id>/', views.cancel_trade, name='cancel_trade'),
     path('trading/accept/<int:trade_id>/', views.accept_trade, name='accept_trade'),
     path('trading/reject/<int:trade_id>/', views.reject_trade, name='reject_trade'),
+    path('notifications/mark_read/', views.mark_notifications_read, name='mark_notifications_read'),
 ] 
